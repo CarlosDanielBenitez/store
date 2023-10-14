@@ -14,19 +14,30 @@ const Slider = ({ children }) => {
     }
 
 
-const onMouseDown = (event) =>{}
+const onHandleMouseDown = (event) =>{
+    startX.current = event.pageX - sliderContentRef.current.offsetLeft;
+    scrollLeft.current = sliderContentRef.current.scrollLeft;
+}
 
-const onMouseLeave = (event) =>{}
+const onHandleMouseLeave = (event) =>{}
 
-const onMouseUp = (event) =>{}
+const onHandleMouseUp = (event) =>{}
 
-const onMouseMove = (event) =>{}
+const onHandleMouseMove = (event) =>{
+    event.preventDefault();
+    const x = event.pageX - sliderContentRef.current.offsetLeft;
+    const walk = (x - startX.current) * 2;
+    sliderContentRef.current.scrollLeft = scrollLeft.current - walk;
+}
 
-const onTouchStart = (event) =>{}
+const onHandleTouchStart = (event) =>{
+    startX.current = event.touches[0].clientX - sliderContentRef.current.offsetLeft;
+    scrollLeft.current = sliderContentRef.current.scrollLeft;
+}
 
-const onTouchEnd = (event) =>{}
+const onHandleTouchEnd = (event) =>{}
 
-const onTouchMove = (event) =>{
+const onHandleTouchMove = (event) =>{
     event.preventDefault();
     const x = event.touches[0].clientX - sliderContentRef.current.offsetLeft;
     const walk = (x - startX.current) * 3;
@@ -40,13 +51,13 @@ const onTouchMove = (event) =>{
             <button onClick={onHandleClickNext} type='button' className='nextButton'><span>&gt;</span></button>
             <div ref={sliderContentRef} 
             className="sliderContent"
-            onMouseDown={onMouseDown}
-            onMouseLeave={onMouseLeave}
-            onMouseUp={onMouseUp}
-            onMouseMove={onMouseMove}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            onTouchMove={onTouchMove}
+            onMouseDown={onHandleMouseDown}
+            onMouseLeave={onHandleMouseLeave}
+            onMouseUp={onHandleMouseUp}
+            onMouseMove={onHandleMouseMove}
+            onTouchStart={onHandleTouchStart}
+            onTouchEnd={onHandleTouchEnd}
+            onTouchMove={onHandleTouchMove}
             >
                 {children}
             </div>
