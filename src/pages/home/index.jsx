@@ -16,58 +16,68 @@ function Home() {
     const navigate = useNavigate();
     const [search, setSearch] = useState('');
     const [active, setActive] = useState(false);
-    const [showDetails, setShowDetails] = useState(false);
+    const [isFiltered, setIsFiltered] = useState(false);
     const [productDetail, setProductDetail] = useState(null);
     const [productFiltered, setProductFiltered] = useState([]);
 
-    const { data: products, loading: loadingProducts, error: errorProducts  } = useFetch(API_URLS.PRODUCTS.url, API_URLS.PRODUCTS.config);
-    const { data: categories, loading: loadingCategories, error: errorCategories  } = useFetch(API_URLS.CATEGORIES.url, API_URLS.CATEGORIES.config);
+    const { data: products, loading: loadingProducts, error: errorProducts } = useFetch(API_URLS.PRODUCTS.url, API_URLS.PRODUCTS.config);
+    const { data: categories, loading: loadingCategories, error: errorCategories } = useFetch(API_URLS.CATEGORIES.url, API_URLS.CATEGORIES.config);
 
-    const filterBySearch = (query) => {
-        let updateProductList = [...products];
+    // const filterBySearch = (query) => {
+    //     let updateProductList = [...products];
 
-        updateProductList = updateProductList.filter((item) => {
-        return item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
-        })
-        
-        setProductFiltered(updateProductList);
-    }
+    //     updateProductList = updateProductList.filter((item) => {
+    //     return item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    //     })
 
-    const onChange = (event) => {
-        const value = event.target.value;
-        setSearch(value);
-        filterBySearch(value);
-    }
+    //     setProductFiltered(updateProductList);
+    // }
 
-    const onFocus = () => {
-        setActive(true);
-    }
+    // const onChange = (event) => {
+    //     const value = event.target.value;
+    //     setSearch(value);
+    //     filterBySearch(value);
+    // }
 
-    const onBlur = () => {
-        setActive(false);
-    }
+    // const onFocus = () => {
+    //     setActive(true);
+    // }
+
+    // const onBlur = () => {
+    //     setActive(false);
+    // }
 
     const onShowDetails = (id) => {
         navigate(`/products/${id}`)
     }
 
+    const onFilter = (name) => {
+        setIsFiltered(true)
+        const productsByCategory = products.filter((product) => product.category === name);
+        setProductFiltered(productsByCategory)
+    }
+
     return (
         <div>
-        <div className='contentContainer'>
-            <div className='categoriesContainer'>
-                {loadingCategories && <Loader />}
-                {errorCategories && <h2>{errorCategories}</h2>}
-                <Slider>
-                {
-                    categories.map((category) => (
-                        <div key={category.id} className='categoryContainer'>
-                            <p className='categoryName'>{category.name}</p>
-                        </div>
-                    )) 
-                }
-                </Slider>
-            </div>
-            <div className='inputContainer'>
+            <div className='contentContainer'>
+                <div className='categoriesContainer'>
+                    {loadingCategories && <Loader />}
+                    {errorCategories && <h2>{errorCategories}</h2>}
+                    <Slider>
+                        <button onClick={() => setIsFiltered(false)} type='button' className="categoryContainer">
+                            <p className='categoryName'>All</p>
+                        </button>
+                        {
+                            categories.map((category) => (
+                                <button onClick={() => onFilter(category.name)} type='button' key={category.id} className='categoryContainer'>
+                                    <p className='categoryName'>{category.name}</p>
+                                </button>
+                            ))
+                        }
+
+                    </Slider>
+                </div>
+                {/* <div className='inputContainer'>
             <Input 
                 placeholder='find a product'
                 id='task'
@@ -78,25 +88,28 @@ function Home() {
                 onBlur={onBlur}
                 active={active}
             />
+            </div> */}
+                <h2 className='headerTitleCard'>Products</h2>
+                <div className='cardContainer'>
+                    {loadingProducts && <Loader />}
+                    {errorProducts && <h2>{errorProducts}</h2>}
+                    {search.length > 0 && productFiltered.length === 0 && <h2>Product not found</h2>}
+                    {
+                        isFiltered ? (
+                            productFiltered.map((product) => (
+                                <Card key={product.id} {...product} onShowDetails={onShowDetails} />
+                            ))
+                        ) : (
+                            products.map((product) => (
+                                <Card key={product.id} {...product} onShowDetails={onShowDetails} />
+                            ))
+                        )
+                    }
+                    {
+                        isFiltered && productFiltered.length === 0 && <h2>Products not found</h2>
+                    }
+                </div>
             </div>
-            <h2 className='headerTitleCard'>Products</h2>
-            <div className='cardContainer'>
-            {loadingProducts && <Loader />}
-            {errorProducts && <h2>{errorProducts}</h2>}
-            { search.length > 0 && productFiltered.length === 0 && <h2>Product not found</h2>}
-            {
-                search.length > 0 ? (
-                productFiltered.map((product) => (
-                    <Card key={product.id} {...product} onShowDetails={onShowDetails} />
-                ))
-                ) : (
-                products.map((product) => (
-                <Card key={product.id} {...product} onShowDetails={onShowDetails} />
-                ))
-                )
-            }
-            </div>
-        </div>
         </div>
     )
 }
