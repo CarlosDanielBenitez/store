@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import './styles.css'
 import Header from '../../components/header'
 import Input from '../../components/input';
@@ -10,6 +10,7 @@ import { useFetch } from '../../hooks/useFetch';
 import { API_URLS } from '../../constants/index'
 import { useNavigate } from 'react-router-dom';
 import Slider from '../../components/slider';
+import { CartContext } from '../../context/cart-context';
 
 
 function Home() {
@@ -19,7 +20,8 @@ function Home() {
     const [isFiltered, setIsFiltered] = useState(false);
     const [productDetail, setProductDetail] = useState(null);
     const [productFiltered, setProductFiltered] = useState([]);
-    const [cart, setCart] = useState([]);
+
+    const {setProducts, products: productsContext, onAddToCart, cart} = useContext(CartContext)
 
     const { data: products, loading: loadingProducts, error: errorProducts } = useFetch(API_URLS.PRODUCTS.url, API_URLS.PRODUCTS.config);
     const { data: categories, loading: loadingCategories, error: errorCategories } = useFetch(API_URLS.CATEGORIES.url, API_URLS.CATEGORIES.config);
@@ -55,72 +57,25 @@ function Home() {
     }
 
     // filter function
-    const onFilter = (name) => {
-        setIsFiltered(true)
-        const productsByCategory = products.filter((product) => product.category === name);
-        setProductFiltered(productsByCategory)
-    }
+    // const onFilter = (name) => {
+    //     setIsFiltered(true)
+    //     const productsByCategory = products.filter((product) => product.category === name);
+    //     setProductFiltered(productsByCategory)
+    // }
 
-    //cart function
-    const onAddToCart = (id) => {
-        //find the product
-        const item = products.find(product => product.id === id);
-
-        // stock limit
-        if (cart?.find(product => product.id === id)?.quantity === Number(item.stock)) return;
-
-        //add product with property quantity to cart when it's empty
-        if (cart?.length === 0) {
-            setCart([{ ...item, quantity: 1 }])
+    useEffect(() => {
+        if(products?.length > 0){
+            setProducts(products)
         }
+    }, [products, setProducts])
+    
 
-        // add product to cart when it's not empty, but is not in the cart
-        if (cart?.length > 0 && !cart?.find(product => product.id === id)) {
-            setCart([...cart, { ...item, quantity: 1 }])
-        }
-
-        // when it's not empty and the product is already in the cart. Add an item
-        if (cart?.length > 0 && cart?.find(product => product.id === id)) {
-            setCart(currentCart => {
-                return currentCart.map(product => {
-                    if (product.id === id) {
-                        return { ...product, quantity: product.quantity + 1 }
-                    } else {
-                        return product;
-                    }
-                })
-            })
-        }
-    }
-
-    const onDrecreaseCartItem = (id) => {
-        if (cart?.find(product => product.id === id)?.quantity === 1) return;
-        if (cart?.length > 0 && cart?.find(product => product.id === id)) {
-            setCart(currentCart => {
-                return currentCart.map(product => {
-                    if (product.id === id) {
-                        return { ...product, quantity: product.quantity - 1 }
-                    } else {
-                        return product;
-                    }
-                })
-            })
-        }
-    }
-
-    const onRemoveCartItem = (id) => {
-        setCart(currentCart => {
-            return currentCart.filter(product => product.id !== id)
-        })
-    }
-    const sumTotalCart = cart.reduce((acc, product) => acc + (product.price * product.quantity), 0)
-
-
+console.log({productsContext, cart});
     return (
 
         <div>
             <div className='contentContainer'>
-                <h2>Cart</h2>
+                {/* <h2>Cart</h2>
                 <div className="cartContainer">
                     {cart.length === 0 && <h2>Cart is empty</h2>}
                     {
@@ -147,7 +102,7 @@ function Home() {
                     {
                         cart?.length > 0 && <p className='cartTotal'>Total: USD{sumTotalCart}</p>
                     }
-                </div>
+                </div> */}
                 <div className='categoriesContainer'>
                     {loadingCategories && <Loader />}
                     {errorCategories && <h2>{errorCategories}</h2>}
