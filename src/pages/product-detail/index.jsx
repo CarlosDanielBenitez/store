@@ -16,7 +16,7 @@ function ProductDetail() {
     return (
         <>
             <div className='headerDetailContainer'>
-                {history.length > 2 ? (<button onClick={() => navigate(-1)} className='backButton'> &#8592; Back</button>) : null}
+                {history.length >= 2 ? (<button onClick={() => navigate(-1)} className='backButton'> &#8592; Back</button>) : null}
                 <h2 className='headerTitleCard'>Product Detail</h2>
             </div>
             {loading && (

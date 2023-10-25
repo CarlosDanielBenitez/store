@@ -2,9 +2,16 @@
 import { useContext } from "react";
 import './styles.css';
 import { CartContext } from "../../context/cart-context";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ logo }) => {
-    const { cart } = useContext(CartContext)
+    const { cart } = useContext(CartContext);
+
+    const navigate = useNavigate();
+    const goToCart = () =>{
+        navigate('/cart')
+    }
+
     return (
         <header className="header">
             <a href="/" className="logo">{logo}</a>
@@ -18,11 +25,11 @@ const Header = ({ logo }) => {
                     <li><a href="#">Products</a></li>
                     <li><a href="#">Categories</a></li>
                     <li><a href="#">Contact</a></li>
-                    <li className="menu-cart-container">
-                        <img src="https://cdn-icons-png.flaticon.com/512/5465/5465858.png " alt="" className="menu-cart-img" />
+                    <li onClick={goToCart} className="menu-cart-container">
                         <div className="menu-cart-count-container">
                             <span className="menu-cart-count">{cart.length}</span>
                         </div>
+                        <img src="https://cdn-icons-png.flaticon.com/512/5465/5465858.png " alt="" className="menu-cart-img" />
                     </li>
                 </ul>
             </nav>
