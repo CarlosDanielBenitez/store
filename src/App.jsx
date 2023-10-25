@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <CartProvider>
-        <Header logo="Ds" />
+        <Header logo="Dan Store" />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/products/:productId' element={<ProductDetail />} />

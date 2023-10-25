@@ -2,7 +2,7 @@
 import { useContext } from "react";
 import './styles.css';
 import { CartContext } from "../../context/cart-context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const Header = ({ logo }) => {
     const { cart } = useContext(CartContext);
@@ -14,7 +14,7 @@ const Header = ({ logo }) => {
 
     return (
         <header className="header">
-            <a href="/" className="logo">{logo}</a>
+            <NavLink to="/" className="logo">{logo}</NavLink>
             <input type="checkbox" className="side-menu" id="side-menu" />
             <label className="hamb" htmlFor="side-menu">
                 <span className="hamb-line"></span>
@@ -26,10 +26,10 @@ const Header = ({ logo }) => {
                     <li><a href="#">Categories</a></li>
                     <li><a href="#">Contact</a></li>
                     <li onClick={goToCart} className="menu-cart-container">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5465/5465858.png " alt="" className="menu-cart-img" />
                         <div className="menu-cart-count-container">
                             <span className="menu-cart-count">{cart.length}</span>
                         </div>
-                        <img src="https://cdn-icons-png.flaticon.com/512/5465/5465858.png " alt="" className="menu-cart-img" />
                     </li>
                 </ul>
             </nav>

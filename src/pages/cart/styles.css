@@ -1,0 +1,29 @@
+.cartContainer {
+  display: flex;
+  margin: 1rem 1.6rem;
+  gap: 1rem;
+}
+.cartTotal {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.cartDetailActions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    max-width: 515px;
+
+}
+.cartButtonCheckout {
+  border: none;
+  background-color: #5156a4;
+  color: #ffffff;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 0.2rem;
+  transition: all ease-in-out .2s;
+}
+.cartButtonCheckout:hover {
+    background-color: #3f428e;
+}

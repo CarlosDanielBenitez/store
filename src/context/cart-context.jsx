@@ -8,7 +8,7 @@ const initialState = {
     getItemQuantity: () => { },
     onDrecreaseItem: () => { },
     onAddToCart: () => { },
-    onRemoveCartItem: () => { },
+    onRemoveItem: () => { },
     total: 0,
 }
 
@@ -67,7 +67,7 @@ export const CartProvider = ({ children }) => {
         }
     }
 
-    const onRemoveCartItem = (id) => {
+    const onRemoveItem = (id) => {
         setCart(currentCart => {
             return currentCart.filter(product => product.id !== id)
         })
@@ -79,6 +79,10 @@ export const CartProvider = ({ children }) => {
         // its to know quantity of products in cart
     }
 
+    const getTotalQuantityItem = () =>{
+        return cart.reduce((acc, product) => acc + product.quantity, 0)
+    }
+
     //return functions
     return (
         <CartContext.Provider value={{
@@ -86,13 +90,14 @@ export const CartProvider = ({ children }) => {
             setCart,
             onDrecreaseItem,
             onAddToCart,
-            onRemoveCartItem,
+            onRemoveItem,
             total,
             products,
             setProducts,
             categories,
             setCategories,
             getItemQuantity,
+            getTotalQuantityItem
         }}
         >
             {children}      {/* the children that wrapping in this component */}

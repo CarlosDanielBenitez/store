@@ -107,6 +107,7 @@
   color: #ffffff;
   padding: 1rem 2rem;
   border-radius: .2rem;
+  transition: all ease-in-out .3s;
 }
 
 .cartButtonAdd:hover{
